@@ -17,12 +17,12 @@ export class MessagesController {
   }
 
   @Get(':id')
-  getMessage(@Param('id') id: string) {
+  getMessage(@Param('id') id: number) {
     return this.service.getMessageById(id);
   }
 
-  @Delete()
-  deleteMessage(@Param('id') id: string) {
+  @Delete(':id')
+  deleteMessage(@Param('id') id: number) {
     return this.service.delete(id);
   }
 }

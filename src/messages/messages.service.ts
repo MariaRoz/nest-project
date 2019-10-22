@@ -21,11 +21,11 @@ export class MessagesService {
     return await this.messageRepository.find();
   }
 
-  async getMessageById(id: string) {
+  async getMessageById(id: number) {
     return await this.messageRepository.findOne({where: { id }});
   }
 
-  async delete(id: string) {
-    return await this.messageRepository.delete(id);
+  async delete(id: number) {
+     return await this.messageRepository.delete(id);
   }
 }
