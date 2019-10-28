@@ -10,4 +10,7 @@ export class Messages {
 
   @Column('text')
   message: string;
+
+  @Column({ type: 'datetime', default: 'now()'})
+  createdAt: Date;
 }
