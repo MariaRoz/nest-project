@@ -1,4 +1,4 @@
-import { HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
@@ -14,6 +14,7 @@ export class AuthService {
     const user = await this.usersService.findOne(data.username);
     if (user && await AuthService.passwordsAreEqual(user.password, data.password)) {
       return {
+        username: user.username,
         access_token: this.jwtService.sign({ username: user.username, sub: user.id }),
       };
     }
@@ -23,11 +24,11 @@ export class AuthService {
   async register(data: any) {
     let user = await this.usersService.findOne(data.username);
     if (user) {
-      console.log('Username exists');
-      return new Error('User exist');
+      throw new HttpException({status: HttpStatus.FORBIDDEN, error: 'Username exist'}, 403);
     }
     user = await this.usersService.createUser(data);
     return {
+      username: user.username,
       access_token: this.jwtService.sign({ username: user.username, sub: user.id }),
     };
   }
