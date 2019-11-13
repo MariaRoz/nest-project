@@ -2,6 +2,8 @@ import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@n
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
+import { UserDto } from '../users/user.dto';
+
 
 @Injectable()
 export class AuthService {
@@ -10,7 +12,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async login(data: any) {
+  async login(data: UserDto): Promise<HttpException | { username: string, access_token: string }> {
     const user = await this.usersService.findOne(data.username);
     if (user && await AuthService.passwordsAreEqual(user.password, data.password)) {
       return {
@@ -18,13 +20,13 @@ export class AuthService {
         access_token: this.jwtService.sign({ username: user.username, sub: user.id }),
       };
     }
-    throw new UnauthorizedException();
+    throw new HttpException({status: HttpStatus.FORBIDDEN, message: 'This password or email is not correct'}, 401);
   }
 
-  async register(data: any) {
+  async register(data: UserDto): Promise<HttpException | { username: string, access_token: string }> {
     let user = await this.usersService.findOne(data.username);
     if (user) {
-      throw new HttpException({status: HttpStatus.FORBIDDEN, error: 'Username exist'}, 403);
+      throw new HttpException({status: HttpStatus.FORBIDDEN, message: 'This username already exist'}, 403);
     }
     user = await this.usersService.createUser(data);
     return {
