@@ -19,8 +19,9 @@ export class UserEntity {
   @Column({ type: 'datetime', default: 'now()'})
   updatedAt: Date;
 
-  @OneToMany(type => Messages, messages => messages.authorConnection)
-  messagesConnection: Promise<Messages[]>;
+  @OneToMany(type => Messages, messages => messages.author)
+  messages: Messages[];
+
 
   @BeforeUpdate()
   updateTimestamp() {
@@ -30,5 +31,9 @@ export class UserEntity {
   @BeforeInsert()
   async hashPassword() {
     this.password = await bcrypt.hash(this.password, 10);
+  }
+
+  sanitize() {
+   delete this.password;
   }
 }

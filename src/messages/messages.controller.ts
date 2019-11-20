@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Req, UseGuards } from '@nestjs/common';
 import { Messages } from './messages.entity';
 import { MessagesService } from './messages.service';
 import { AuthGuard } from '@nestjs/passport';
@@ -9,8 +9,8 @@ export class MessagesController {
   constructor(private service: MessagesService) {}
 
   @Post()
-  create(@Body() message: Messages) {
-    return this.service.createMessage(message);
+  create(@Body() message: Messages, @Req() request) {
+    return this.service.createMessage(message, request.user.userId);
   }
 
   @Get()

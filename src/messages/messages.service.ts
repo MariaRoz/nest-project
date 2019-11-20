@@ -11,14 +11,18 @@ export class MessagesService {
     private readonly messageRepository: Repository<Messages>,
   ) {}
 
-   async createMessage(data: MessagesDto) {
-    const message = await this.messageRepository.create(data);
-    await this.messageRepository.save(message);
-    return message;
+   async createMessage(data: MessagesDto, userId) {
+    return this.messageRepository.insert({authorId: userId, message: data.message});
   }
 
   async showAll() {
-    return await this.messageRepository.find();
+ let result = await this.messageRepository.find({relations: ['author']});
+
+ result = result.map(messages => {
+   messages.author.sanitize(); return messages;
+ });
+
+ return result;
   }
 
   async getMessageById(id: number) {

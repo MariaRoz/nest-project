@@ -1,4 +1,5 @@
 export interface MessagesDto {
   id: number;
   message: string;
+  authorId: number;
 }

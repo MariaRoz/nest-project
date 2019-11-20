@@ -15,7 +15,7 @@ export class Messages {
   @Column({ type: 'int', nullable: false })
   authorId: number;
 
-  @ManyToOne(type => UserEntity, user => user.messagesConnection)
+  @ManyToOne(type => UserEntity, user => user.messages)
   @JoinColumn({name: 'authorId'})
-  authorConnection: Promise<UserEntity>;
+  author: UserEntity;
 }
