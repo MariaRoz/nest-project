@@ -1,7 +1,8 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
+import { UserEntity } from '../users/user.entity';
 
-@Entity()
-export class Messages {
+@Entity('messages')
+export class Message {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -10,4 +11,11 @@ export class Messages {
 
   @Column({ type: 'datetime', default: 'now()'})
   createdAt: Date;
+
+  @Column({ type: 'int', nullable: false })
+  authorId: number;
+
+  @ManyToOne(type => UserEntity, user => user.messages)
+  @JoinColumn({name: 'authorId'})
+  author: UserEntity;
 }

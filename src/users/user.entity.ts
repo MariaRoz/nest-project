@@ -1,5 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert, BeforeUpdate } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert, BeforeUpdate, OneToMany } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
+import { Message } from '../messages/messages.entity';
 
 @Entity('users')
 export class UserEntity {
@@ -18,6 +19,10 @@ export class UserEntity {
   @Column({ type: 'datetime', default: 'now()'})
   updatedAt: Date;
 
+  @OneToMany(type => Message, messages => messages.author)
+  messages: Message[];
+
+
   @BeforeUpdate()
   updateTimestamp() {
     this.updatedAt = new Date();
@@ -26,5 +31,9 @@ export class UserEntity {
   @BeforeInsert()
   async hashPassword() {
     this.password = await bcrypt.hash(this.password, 10);
+  }
+
+  sanitize() {
+   delete this.password;
   }
 }
