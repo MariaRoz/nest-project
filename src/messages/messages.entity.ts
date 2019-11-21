@@ -1,8 +1,8 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { UserEntity } from '../users/user.entity';
 
-@Entity()
-export class Messages {
+@Entity('messages')
+export class Message {
   @PrimaryGeneratedColumn()
   id: number;
 

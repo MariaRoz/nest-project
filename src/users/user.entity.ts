@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert, BeforeUpdate, OneToMany } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
-import { Messages } from '../messages/messages.entity';
+import { Message } from '../messages/messages.entity';
 
 @Entity('users')
 export class UserEntity {
@@ -19,8 +19,8 @@ export class UserEntity {
   @Column({ type: 'datetime', default: 'now()'})
   updatedAt: Date;
 
-  @OneToMany(type => Messages, messages => messages.author)
-  messages: Messages[];
+  @OneToMany(type => Message, messages => messages.author)
+  messages: Message[];
 
 
   @BeforeUpdate()
