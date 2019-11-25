@@ -2,14 +2,17 @@ import { Body, Controller, Delete, Get, Param, Post, Req, UseGuards } from '@nes
 import { Message } from './messages.entity';
 import { MessagesService } from './messages.service';
 import { AuthGuard } from '@nestjs/passport';
+import { EventsGateway } from './event.gateway';
 
 @UseGuards(AuthGuard('jwt'))
 @Controller('messages')
 export class MessagesController {
-  constructor(private service: MessagesService) {}
+  constructor(private service: MessagesService, private eventGateway: EventsGateway) {}
 
   @Post()
   create(@Body() message: Message, @Req() request) {
+    console.log('here')
+    this.eventGateway.notify('type', {a: 'b'})
     return this.service.createMessage(message, request.user.userId);
   }
 
