@@ -9,24 +9,12 @@ import {
 import { Server } from 'socket.io';
 
 @WebSocketGateway()
-export class EventsGateway implements OnGatewayConnection {
+export class EventsGateway {
 
   @WebSocketServer() server: Server;
 
-  handleConnection(socket) {
-    console.log('New Connection has been added');
+  public notify(action: string, payload?: object): void {
+    this.server.emit('chat', {action, payload});
   }
 
-  public notify(action: string, payload: object): void {
-    console.log('tutututututu');
-    this.server.emit('messages', {action, payload});
-  }
-
-  @SubscribeMessage('messages')
-  handleEvent(client, @MessageBody() data: string): string {
-    console.log(data, 'ffff');
-    client.broadcast.emit('messages', data);
-    console.log(data, 'nnn');
-    return data;
-  }
 }
