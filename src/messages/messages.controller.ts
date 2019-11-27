@@ -7,11 +7,10 @@ import { EventsGateway } from './event.gateway';
 @UseGuards(AuthGuard('jwt'))
 @Controller('messages')
 export class MessagesController {
-  constructor(private service: MessagesService, private eventGateway: EventsGateway) {}
+  constructor(private service: MessagesService) {}
 
   @Post()
   create(@Body() message: Message, @Req() request) {
-    this.eventGateway.notify('[Chat] Chat Updated');
     return this.service.createMessage(message, request.user.userId);
   }
 
