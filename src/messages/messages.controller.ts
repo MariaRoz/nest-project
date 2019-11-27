@@ -11,7 +11,7 @@ export class MessagesController {
 
   @Post()
   create(@Body() message: Message, @Req() request) {
-    this.eventGateway.notify('ChatUpdated');
+    this.eventGateway.notify('[Chat] Chat Updated');
     return this.service.createMessage(message, request.user.userId);
   }
 

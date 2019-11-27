@@ -13,8 +13,8 @@ export class EventsGateway {
 
   @WebSocketServer() server: Server;
 
-  public notify(action: string, payload?: object): void {
-    this.server.emit('chat', {action, payload});
+  public notify(type: string, payload?: object): void {
+    this.server.emit('notification', {type, payload});
   }
 
 }
