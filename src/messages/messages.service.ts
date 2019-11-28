@@ -3,16 +3,20 @@ import { Message } from './messages.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository } from 'typeorm';
 import { MessageDto } from './messages.dto';
+import { EventsGateway } from './event.gateway';
 
 @Injectable()
 export class MessagesService {
   constructor(
     @InjectRepository(Message)
     private readonly messageRepository: Repository<Message>,
+    private eventGateway: EventsGateway,
   ) {}
 
    async createMessage(data: MessageDto, userId) {
-    return this.messageRepository.insert({authorId: userId, message: data.message});
+    const insertMessage = await this.messageRepository.insert({authorId: userId, message: data.message});
+    this.eventGateway.notify('[Chat] Chat Updated');
+    return insertMessage;
   }
 
   async showAll(): Promise<Message[]> {

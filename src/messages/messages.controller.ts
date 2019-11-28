@@ -2,6 +2,7 @@ import { Body, Controller, Delete, Get, Param, Post, Req, UseGuards } from '@nes
 import { Message } from './messages.entity';
 import { MessagesService } from './messages.service';
 import { AuthGuard } from '@nestjs/passport';
+import { EventsGateway } from './event.gateway';
 
 @UseGuards(AuthGuard('jwt'))
 @Controller('messages')
