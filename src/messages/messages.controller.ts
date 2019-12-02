@@ -2,30 +2,34 @@ import { Body, Controller, Delete, Get, Param, Post, Req, UseGuards } from '@nes
 import { Message } from './messages.entity';
 import { MessagesService } from './messages.service';
 import { AuthGuard } from '@nestjs/passport';
-import { EventsGateway } from './event.gateway';
 
 @UseGuards(AuthGuard('jwt'))
-@Controller('messages')
+@Controller()
 export class MessagesController {
   constructor(private service: MessagesService) {}
 
-  @Post()
+  @Post('messages')
   create(@Body() message: Message, @Req() request) {
     return this.service.createMessage(message, request.user.userId);
   }
 
-  @Get()
+  @Get('messages')
   showAllMessages() {
     return this.service.showAll();
   }
 
-  @Get(':id')
+  @Get('messages/:id')
   getMessage(@Param('id') id: number) {
     return this.service.getMessageById(id);
   }
 
-  @Delete(':id')
+  @Delete('messages/:id')
   deleteMessage(@Param('id') id: number) {
     return this.service.delete(id);
+  }
+
+  @Get('online')
+  usersOnline() {
+    return this.service.getOnlineUsers();
   }
 }
