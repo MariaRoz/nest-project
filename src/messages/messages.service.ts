@@ -36,11 +36,4 @@ export class MessagesService {
   async delete(id: number): Promise<DeleteResult> {
      return this.messageRepository.delete(id);
   }
-
-  async getOnlineUsers(): Promise<string []> {
-    const result = await this.messageRepository.find({relations: ['author']});
-
-    return [...new Set(result.filter(messages => (new Date().getTime() - messages.createdAt.getTime()) / 60000 < 15)
-      .map(data => data.author.username))];
-  }
 }

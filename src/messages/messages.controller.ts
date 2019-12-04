@@ -4,32 +4,27 @@ import { MessagesService } from './messages.service';
 import { AuthGuard } from '@nestjs/passport';
 
 @UseGuards(AuthGuard('jwt'))
-@Controller()
+@Controller('messages')
 export class MessagesController {
   constructor(private service: MessagesService) {}
 
-  @Post('messages')
+  @Post()
   create(@Body() message: Message, @Req() request) {
     return this.service.createMessage(message, request.user.userId);
   }
 
-  @Get('messages')
+  @Get()
   showAllMessages() {
     return this.service.showAll();
   }
 
-  @Get('messages/:id')
+  @Get(':id')
   getMessage(@Param('id') id: number) {
     return this.service.getMessageById(id);
   }
 
-  @Delete('messages/:id')
+  @Delete(':id')
   deleteMessage(@Param('id') id: number) {
     return this.service.delete(id);
-  }
-
-  @Get('online')
-  usersOnline() {
-    return this.service.getOnlineUsers();
   }
 }
