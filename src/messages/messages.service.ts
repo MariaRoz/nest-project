@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Message } from './messages.entity';
+import { MessageEntity } from './messages.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository } from 'typeorm';
 import { MessageDto } from './messages.dto';
@@ -8,8 +8,8 @@ import { EventsGateway } from './event.gateway';
 @Injectable()
 export class MessagesService {
   constructor(
-    @InjectRepository(Message)
-    private readonly messageRepository: Repository<Message>,
+    @InjectRepository(MessageEntity)
+    private readonly messageRepository: Repository<MessageEntity>,
     private eventGateway: EventsGateway,
   ) {}
 
@@ -19,7 +19,7 @@ export class MessagesService {
     return insertMessage;
   }
 
-  async showAll(): Promise<Message[]> {
+  async showAll(): Promise<MessageDto[]> {
     let result = await this.messageRepository.find({relations: ['author']});
 
     result = result.map(messages => {
@@ -29,7 +29,7 @@ export class MessagesService {
     return result;
   }
 
-  async getMessageById(id: number): Promise<Message> {
+  async getMessageById(id: number): Promise<MessageDto> {
     return this.messageRepository.findOne({where: { id }});
   }
 
