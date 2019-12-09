@@ -19,6 +19,12 @@ export class MessagesService {
     return insertMessage;
   }
 
+  async createOfflineMessages(data, userId) {
+    data.map(async res => await this.messageRepository.insert({authorId: userId, message: res.message, createdAt: res.createdAt}));
+    this.eventGateway.notify('[Chat] Chat Updated');
+    return data;
+  }
+
   async showAll(): Promise<MessageDto[]> {
     let result = await this.messageRepository.find({relations: ['author']});
 

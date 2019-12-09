@@ -4,27 +4,33 @@ import { MessagesService } from './messages.service';
 import { AuthGuard } from '@nestjs/passport';
 
 @UseGuards(AuthGuard('jwt'))
-@Controller('messages')
+
+@Controller()
 export class MessagesController {
   constructor(private service: MessagesService) {}
 
-  @Post()
+  @Post('messages')
   create(@Body() message: MessageEntity, @Req() request) {
     return this.service.createMessage(message, request.user.userId);
   }
 
-  @Get()
+  @Get('messages')
   showAllMessages() {
     return this.service.showAll();
   }
 
-  @Get(':id')
+  @Get('messages/:id')
   getMessage(@Param('id') id: number) {
     return this.service.getMessageById(id);
   }
 
-  @Delete(':id')
+  @Delete('messages/:id')
   deleteMessage(@Param('id') id: number) {
     return this.service.delete(id);
+  }
+
+  @Post('messages/offline')
+  createOfflineMessages(@Body() messages: MessageEntity[],  @Req() request) {
+    return this.service.createOfflineMessages(messages, request.user.userId);
   }
 }
