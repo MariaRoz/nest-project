@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { MessageEntity } from './messages.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DeleteResult, Repository } from 'typeorm';
+import { DeleteResult, InsertResult, Repository } from 'typeorm';
 import { MessageDto } from './messages.dto';
 import { EventsGateway } from './event.gateway';
 
@@ -13,8 +13,15 @@ export class MessagesService {
     private eventGateway: EventsGateway,
   ) {}
 
-   async createMessage(data: MessageDto, userId) {
+   async createMessage(data: MessageDto, userId): Promise<InsertResult> {
     const insertMessage = await this.messageRepository.insert({authorId: userId, message: data.message});
+    this.eventGateway.notify('[Chat] Chat Updated');
+    return insertMessage;
+  }
+
+  async createOfflineMessages(data, userId): Promise<InsertResult> {
+    data.map(message => message.authorId = userId);
+    const insertMessage = await this.messageRepository.insert(data);
     this.eventGateway.notify('[Chat] Chat Updated');
     return insertMessage;
   }
